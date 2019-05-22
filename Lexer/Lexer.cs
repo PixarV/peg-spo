@@ -49,9 +49,8 @@ namespace HelloWorld.Lexer
                     isMatched = true;
                     break;
                 }
-                
+
                 if (!isMatched) throw new InvalidDataException("cannont be parse");
-                    
             }
         }
     }

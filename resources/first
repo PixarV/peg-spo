@@ -1,1 +1,4 @@
-program _example();   
+program _example(input, output);   
+var x, y : real;
+var arr : array [-1..3] of integer;
+function fun(a, b : integer): integer;
