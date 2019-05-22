@@ -14,8 +14,10 @@ namespace HelloWorld
             var definitions = new List<TokenDefinition>();
             definitions.Add(new TokenDefinition(new Regex(@"^\s*(program|var|array|of|function|procedure)\s*"), Keyword));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*(integer|real)\s*"), TokenType.Type));
+            definitions.Add(new TokenDefinition(new Regex(@"^\s*(begin|end)\s*"), Compound));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*[_a-zA-Z][_a-zA-Z0-9]*\s*"), Identifier));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*[-+]?\d+\s*"), Num));
+            definitions.Add(new TokenDefinition(new Regex(@"^\s*\s*"), Operation));
             definitions.Add(new TokenDefinition(new Regex(@"^\("), LeftParenthesis));
             definitions.Add(new TokenDefinition(new Regex(@"^\["), LeftBracket));
             definitions.Add(new TokenDefinition(new Regex(@"^\)"), RightParenthesis));
