@@ -1,13 +1,15 @@
+using System.Text.RegularExpressions;
+
 namespace HelloWorld.Lexer.Token
 {
     public class TokenDefinition
     {
-        public string Regexp { get; }
+        public Regex Regex { get; }
         public TokenType Type { get; }
 
-        public TokenDefinition(string regexp, TokenType type)
+        public TokenDefinition(Regex regex, TokenType type)
         {
-            Regexp = regexp;
+            Regex = regex;
             Type = type;
         }
     }

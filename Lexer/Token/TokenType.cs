@@ -4,6 +4,9 @@ namespace HelloWorld.Lexer.Token
     {
         Keyword,
         Identifier,
+        LeftParenthesis,
+        RightParenthesis,
+        Semicolon,
         Operator,
         Comma
     }
