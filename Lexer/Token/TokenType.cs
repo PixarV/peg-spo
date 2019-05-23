@@ -13,6 +13,7 @@ namespace HelloWorld.Lexer.Token
         Comma,
         Colon,
         Dots,
+        Dot,
         Type,
         Compound,
         Operation

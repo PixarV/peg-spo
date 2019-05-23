@@ -5,4 +5,4 @@ function fun(a, b : integer): integer;
 begin
     if a = 0 then fun := a
     else fun := fun(b, a + b)
-end;
+end.

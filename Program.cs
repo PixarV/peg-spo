@@ -26,6 +26,7 @@ namespace HelloWorld
             definitions.Add(new TokenDefinition(new Regex(@"^\s*,\s*"), Comma));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*:\s*"), Colon));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*..\s*"), Dots));
+            definitions.Add(new TokenDefinition(new Regex(@"^\s*.\s*"), Dot));
             
             var lexer = new Lexer.Lexer(definitions);
             var tokenize = lexer.Tokenize("resources/first");
