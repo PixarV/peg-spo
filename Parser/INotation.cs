@@ -14,5 +14,6 @@ namespace HelloWorld.Parser
         NonTerminal SubprogramDeclarations();
         Subprogram Subprogram(SubprogramType type);
         NonTerminal SubprogramHead(SubprogramType subprogramType);
+        NonTerminal CompoundStatements();
     }
 }

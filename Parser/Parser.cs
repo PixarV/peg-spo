@@ -35,10 +35,10 @@ namespace HelloWorld.Parser
 
             var declarations = Declarations();
             var subprogramDeclarations = SubprogramDeclarations();
-            
+            var compoundStatements = CompoundStatements();
 
             CheckType(TokenType.Dot, true);
-            return new Program(identifier, identifiersList, declarations, subprogramDeclarations);
+            return new Program(identifier, identifiersList, declarations, subprogramDeclarations, compoundStatements);
         }
 
         public Identifier Identifier()
@@ -111,6 +111,7 @@ namespace HelloWorld.Parser
                 subprograms.Add(subprogram);
             }
 
+            CheckType(TokenType.Semicolon, true);
             return new SubprogramDeclarations(subprograms);
         }
 
@@ -118,7 +119,8 @@ namespace HelloWorld.Parser
         {
             var subprogramHead = SubprogramHead(type);
             var declarations = Declarations();
-            return new Subprogram(subprogramHead, declarations);
+            var compoundStatements = CompoundStatements();
+            return new Subprogram(subprogramHead, declarations, compoundStatements);
         }
 
         public NonTerminal SubprogramHead(SubprogramType subprogramType)
@@ -147,6 +149,15 @@ namespace HelloWorld.Parser
 
             return new SubprogramHead(subprogramType, identifier, parameters, returnType);
         }
+
+        public NonTerminal CompoundStatements()
+        {
+            CheckWord("begin", true);
+            CheckWord("end", true);
+            
+            return new CompoundStatement(new List<NonTerminal>());
+        }
+
 
         private Token Next()
         {
@@ -207,15 +218,6 @@ namespace HelloWorld.Parser
 
             return true;
         }
-
-//        private bool CheckSemicolon(TokenType finalType)
-//        {
-//            var token = Peek();
-//            var type = token.TokenType;
-//            
-//            if (type != TokenType.Semicolon && type != finalType)
-//                throw new InvalidDataException("missing ");
-//        }
 
         private ArrayType GetArray()
         {

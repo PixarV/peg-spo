@@ -6,11 +6,13 @@ namespace HelloWorld.Language
     {
         public NonTerminal SubprogramHead { get; }
         private NonTerminal _declarations;
+        public NonTerminal CompoundStatements { get; }
 
-        public Subprogram(NonTerminal subprogramHead, NonTerminal declarations)
+        public Subprogram(NonTerminal subprogramHead, NonTerminal declarations, NonTerminal compoundStatements)
         {
             SubprogramHead = subprogramHead;
             _declarations = declarations;
+            CompoundStatements = compoundStatements;
         }
     }
 }
