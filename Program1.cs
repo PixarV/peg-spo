@@ -7,7 +7,7 @@ using static HelloWorld.Lexer.Token.TokenType;
 
 namespace HelloWorld
 {
-    class Program
+    class Program1
     {
         static void Main(string[] args)
         {

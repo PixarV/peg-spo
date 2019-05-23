@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using HelloWorld.Language;
 using HelloWorld.Lexer.Token;
 
@@ -34,15 +35,41 @@ namespace HelloWorld.Parser
             return _tokens.Count == 0;
         }
 
+        private bool checkWord(string word)
+        {
+            var token = Peek();
+            if (!token.Value.Equals(word))
+                throw new InvalidDataException("missing " + word);
+
+            return true;
+        }
+
+        private bool checkType(TokenType type)
+        {
+            var token = Peek();
+            if (!token.TokenType.Equals(type))
+                throw new InvalidDataException("doesnt match type " + type);
+
+            return true;
+        }
 
         public NonTerminal Program()
         {
-            throw new System.NotImplementedException();
+            if (IsEnd()) throw new InvalidDataException("empty token list");
+
+            checkWord("program");
+            Eat();
+            var identifier = Id();
+            var identifiersList = IdentifiersList();
+
+            return new Program(identifier, identifiersList);
         }
 
-        public NonTerminal Id()
+        public Identifier Id()
         {
-            throw new System.NotImplementedException();
+            checkType(TokenType.Identifier);
+
+            return new Identifier(Next().Value);
         }
 
         public NonTerminal IdentifiersList()

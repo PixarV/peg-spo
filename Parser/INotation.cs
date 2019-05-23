@@ -5,7 +5,7 @@ namespace HelloWorld.Parser
     public interface INotation
     {
         NonTerminal Program();
-        NonTerminal Id();
+        Identifier Id();
         NonTerminal IdentifiersList();
         NonTerminal Declarations();
     }
