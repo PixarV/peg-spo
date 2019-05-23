@@ -1,6 +1,6 @@
 namespace HelloWorld.Language
 {
-    public class Identifier : NonTerminal
+    public class Identifier 
     {
         public Identifier(string id)
         {

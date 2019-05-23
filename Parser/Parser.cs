@@ -83,30 +83,33 @@ namespace HelloWorld.Parser
         public NonTerminal Program()
         {
             CheckWord("program", true);
-            var identifier = Id();
-            var identifiersList = IdentifiersList();
+            var identifier = Identifier();
+            
+            CheckWord("(", true);
+            var identifiersList = IdentifiersList(TokenType.RightParenthesis);
+            CheckWord(")", true);
+            
             CheckType(TokenType.Semicolon);
 
             return new Program(identifier, identifiersList);
         }
 
-        public Identifier Id()
+        public Identifier Identifier()
         {
             CheckType(TokenType.Identifier);
 
             return new Identifier(Next().Value);
         }
 
-        public NonTerminal IdentifiersList()
+        public NonTerminal IdentifiersList(TokenType finalType)
         {
-            CheckWord("(", true);
             var identifiers = new List<Identifier>();
 
-            while (!CheckWord(")", false))
+            while (Peek().TokenType != finalType)
             {
                 CheckType(TokenType.Identifier);
                 identifiers.Add(new Identifier(Next().Value));
-                CheckComma(TokenType.RightParenthesis);
+                CheckComma(finalType);
             }
 
             return new IdentifierList(identifiers);
@@ -114,7 +117,21 @@ namespace HelloWorld.Parser
 
         public NonTerminal Declarations()
         {
+            var declarations = new List<Declaration>();
+            while (CheckWord("var", false))
+            {
+                var declaration = Declaration();
+                declarations.Add(declaration);
+            }
+            
+            return new Declarations(declarations);
             throw new System.NotImplementedException();
+        }
+
+        public Declaration Declaration()
+        {
+            
+            return null;
         }
     }
 }
