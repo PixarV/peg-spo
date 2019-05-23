@@ -35,46 +35,81 @@ namespace HelloWorld.Parser
             return _tokens.Count == 0;
         }
 
-        private bool checkWord(string word)
+        private bool CheckWord(string word, bool needException)
         {
             var token = Peek();
             if (!token.Value.Equals(word))
-                throw new InvalidDataException("missing " + word);
+            {
+                if (needException) throw new InvalidDataException("missing " + word);
+                return false;
+            }
 
+            Eat();
             return true;
         }
 
-        private bool checkType(TokenType type)
+        private bool CheckType(TokenType type)
         {
             var token = Peek();
-            if (!token.TokenType.Equals(type))
+            if (token.TokenType != type)
                 throw new InvalidDataException("doesnt match type " + type);
 
             return true;
         }
 
-        public NonTerminal Program()
+        private bool CheckComma(TokenType finalType)
+        {
+            var token = Peek();
+            var type = token.TokenType;
+
+            if (type != TokenType.Comma && type != finalType)
+                throw new InvalidDataException("missing comma");
+
+            if (type != TokenType.Comma) return true;
+
+            Eat();
+            if (Peek().TokenType == finalType)
+                throw new InvalidDataException("missing identifier");
+
+            return true;
+        }
+
+        public NonTerminal Parse()
         {
             if (IsEnd()) throw new InvalidDataException("empty token list");
+            return Program();
+        }
 
-            checkWord("program");
-            Eat();
+        public NonTerminal Program()
+        {
+            CheckWord("program", true);
             var identifier = Id();
             var identifiersList = IdentifiersList();
+            CheckType(TokenType.Semicolon);
 
             return new Program(identifier, identifiersList);
         }
 
         public Identifier Id()
         {
-            checkType(TokenType.Identifier);
+            CheckType(TokenType.Identifier);
 
             return new Identifier(Next().Value);
         }
 
         public NonTerminal IdentifiersList()
         {
-            throw new System.NotImplementedException();
+            CheckWord("(", true);
+            var identifiers = new List<Identifier>();
+
+            while (!CheckWord(")", false))
+            {
+                CheckType(TokenType.Identifier);
+                identifiers.Add(new Identifier(Next().Value));
+                CheckComma(TokenType.RightParenthesis);
+            }
+
+            return new IdentifierList(identifiers);
         }
 
         public NonTerminal Declarations()
