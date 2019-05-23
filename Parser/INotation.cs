@@ -7,7 +7,7 @@ namespace HelloWorld.Parser
     {
         NonTerminal Program();
         Identifier Identifier();
-        NonTerminal IdentifiersList(TokenType finalType);
+        NonTerminal IdentifierList(TokenType finalType);
         NonTerminal Declarations();
         Declaration Declaration();
     }

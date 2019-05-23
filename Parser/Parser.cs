@@ -48,12 +48,13 @@ namespace HelloWorld.Parser
             return true;
         }
 
-        private bool CheckType(TokenType type)
+        private bool CheckType(TokenType type, bool needEat)
         {
             var token = Peek();
             if (token.TokenType != type)
                 throw new InvalidDataException("doesnt match type " + type);
 
+            if (needEat) Eat();
             return true;
         }
 
@@ -84,30 +85,30 @@ namespace HelloWorld.Parser
         {
             CheckWord("program", true);
             var identifier = Identifier();
-            
-            CheckWord("(", true);
-            var identifiersList = IdentifiersList(TokenType.RightParenthesis);
-            CheckWord(")", true);
-            
-            CheckType(TokenType.Semicolon);
 
+            CheckType(TokenType.LeftParenthesis, true);
+            var identifiersList = IdentifierList(TokenType.RightParenthesis);
+            CheckType(TokenType.RightParenthesis, true);
+
+            CheckType(TokenType.Semicolon, true);
+            
             return new Program(identifier, identifiersList);
         }
 
         public Identifier Identifier()
         {
-            CheckType(TokenType.Identifier);
+            CheckType(TokenType.Identifier, false);
 
             return new Identifier(Next().Value);
         }
 
-        public NonTerminal IdentifiersList(TokenType finalType)
+        public NonTerminal IdentifierList(TokenType finalType)
         {
             var identifiers = new List<Identifier>();
 
             while (Peek().TokenType != finalType)
             {
-                CheckType(TokenType.Identifier);
+                CheckType(TokenType.Identifier, false);
                 identifiers.Add(new Identifier(Next().Value));
                 CheckComma(finalType);
             }
@@ -123,15 +124,30 @@ namespace HelloWorld.Parser
                 var declaration = Declaration();
                 declarations.Add(declaration);
             }
-            
+
             return new Declarations(declarations);
-            throw new System.NotImplementedException();
         }
 
         public Declaration Declaration()
         {
-            
-            return null;
+            var identifierList = IdentifierList(TokenType.Colon);
+            CheckWord(":", true);
+
+            Type type = null;
+            if (CheckWord("array", false))
+            {
+                CheckWord("[", true);
+                CheckWord("]", true);
+            }
+            else
+            {
+                CheckType(TokenType.Type, false);
+                var token = Next();
+                type = new Type(token.Value);
+            }
+
+            CheckType(TokenType.Semicolon, true);
+            return new Declaration(identifierList, type);
         }
     }
 }

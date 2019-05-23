@@ -2,13 +2,13 @@ namespace HelloWorld.Language
 {
     public class Declaration
     {
-        public IdentifierList IdentifierList { get; }
-        public string Type { get; }
+        public NonTerminal IdentifierList { get; }
+        public Type Type { get; }
 
-        public Declaration(IdentifierList identifierList, string type)
+        public Declaration(NonTerminal identifierList, Type type)
         {
             IdentifierList = identifierList;
-            this.Type = type;
+            Type = type;
         }
     }
 }
