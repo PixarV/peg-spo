@@ -15,6 +15,84 @@ namespace HelloWorld.Parser
             _tokens = tokens;
         }
 
+
+        public NonTerminal Parse()
+        {
+            if (IsEnd()) throw new InvalidDataException("empty token list");
+            return Program();
+        }
+
+        public NonTerminal Program()
+        {
+            CheckWord("program", true);
+            var identifier = Identifier();
+
+            CheckType(TokenType.LeftParenthesis, true);
+            var identifiersList = IdentifierList(TokenType.RightParenthesis);
+            CheckType(TokenType.RightParenthesis, true);
+
+            CheckType(TokenType.Semicolon, true);
+
+            var declarations = Declarations();
+
+            CheckType(TokenType.Dot, true);
+            return new Program(identifier, identifiersList, declarations);
+        }
+
+        public Identifier Identifier()
+        {
+            CheckType(TokenType.Identifier, false);
+
+            return new Identifier(Next().Value);
+        }
+
+        public NonTerminal IdentifierList(TokenType finalType)
+        {
+            var identifiers = new List<Identifier>();
+
+            while (Peek().TokenType != finalType)
+            {
+                CheckType(TokenType.Identifier, false);
+                identifiers.Add(new Identifier(Next().Value));
+                CheckComma(finalType);
+            }
+
+            return new IdentifierList(identifiers);
+        }
+
+        public NonTerminal Declarations()
+        {
+            var declarations = new List<Declaration>();
+            while (CheckWord("var", false))
+            {
+                var declaration = Declaration();
+                declarations.Add(declaration);
+            }
+
+            return new Declarations(declarations);
+        }
+
+        public Declaration Declaration()
+        {
+            var identifierList = IdentifierList(TokenType.Colon);
+            CheckWord(":", true);
+
+            Type type = null;
+            if (CheckWord("array", false))
+            {
+                type = GetArray();
+            }
+            else
+            {
+                CheckType(TokenType.Type, false);
+                var token = Next();
+                type = new Type(token.Value);
+            }
+
+            CheckType(TokenType.Semicolon, true);
+            return new Declaration(identifierList, type);
+        }
+
         private Token Next()
         {
             return _tokens[_index++];
@@ -75,92 +153,20 @@ namespace HelloWorld.Parser
             return true;
         }
 
-        public NonTerminal Parse()
+        private ArrayType GetArray()
         {
-            if (IsEnd()) throw new InvalidDataException("empty token list");
-            return Program();
-        }
+            CheckType(TokenType.LeftBracket, true);
+            CheckType(TokenType.Num, false);
+            int lower = System.Convert.ToInt32(Next().Value);
+            CheckType(TokenType.Dots, true);
+            CheckType(TokenType.Num, false);
+            int upper = System.Convert.ToInt32(Next().Value);
+            CheckType(TokenType.RightBracket, true);
 
-        public NonTerminal Program()
-        {
-            CheckWord("program", true);
-            var identifier = Identifier();
-
-            CheckType(TokenType.LeftParenthesis, true);
-            var identifiersList = IdentifierList(TokenType.RightParenthesis);
-            CheckType(TokenType.RightParenthesis, true);
-
-            CheckType(TokenType.Semicolon, true);
-            
-            var declarations = Declarations();
-            
-            CheckType(TokenType.Dot, true);
-            return new Program(identifier, identifiersList, declarations);
-        }
-
-        public Identifier Identifier()
-        {
-            CheckType(TokenType.Identifier, false);
-
-            return new Identifier(Next().Value);
-        }
-
-        public NonTerminal IdentifierList(TokenType finalType)
-        {
-            var identifiers = new List<Identifier>();
-
-            while (Peek().TokenType != finalType)
-            {
-                CheckType(TokenType.Identifier, false);
-                identifiers.Add(new Identifier(Next().Value));
-                CheckComma(finalType);
-            }
-
-            return new IdentifierList(identifiers);
-        }
-
-        public NonTerminal Declarations()
-        {
-            var declarations = new List<Declaration>();
-            while (CheckWord("var", false))
-            {
-                var declaration = Declaration();
-                declarations.Add(declaration);
-            }
-
-            return new Declarations(declarations);
-        }
-
-        public Declaration Declaration()
-        {
-            var identifierList = IdentifierList(TokenType.Colon);
-            CheckWord(":", true);
-
-            Type type = null;
-            if (CheckWord("array", false))
-            {
-                CheckType(TokenType.LeftBracket, true);
-                CheckType(TokenType.Num, false);
-                int lower = System.Convert.ToInt32(Next().Value);
-                CheckType(TokenType.Dots, true);
-                CheckType(TokenType.Num, false);
-                int upper = System.Convert.ToInt32(Next().Value);
-                CheckType(TokenType.RightBracket, true);
-
-                CheckWord("of", true);
-                CheckType(TokenType.Type, false);
-                var token = Next();
-                type = new ArrayType(token.Value, lower, upper);
-            }
-            else
-            {
-                CheckType(TokenType.Type, false);
-                var token = Next();
-                type = new Type(token.Value);
-            }
-
-            CheckType(TokenType.Semicolon, true);
-            return new Declaration(identifierList, type);
+            CheckWord("of", true);
+            CheckType(TokenType.Type, false);
+            var token = Next();
+            return new ArrayType(token.Value, lower, upper);
         }
     }
 }
