@@ -19,6 +19,7 @@ namespace HelloWorld
             definitions.Add(new TokenDefinition(new Regex(@"^\s*[_a-zA-Z][_a-zA-Z0-9]*\s*"), TokenType.Identifier));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*[-+]?\d+\s*"), Num));
             definitions.Add(new TokenDefinition(new Regex(@"^\s*[+\-*\\=]{1}\s*"), Operation));
+            definitions.Add(new TokenDefinition(new Regex(@"^\s*:=\s*"), AssignOp));
             definitions.Add(new TokenDefinition(new Regex(@"^\("), LeftParenthesis));
             definitions.Add(new TokenDefinition(new Regex(@"^\["), LeftBracket));
             definitions.Add(new TokenDefinition(new Regex(@"^\)"), RightParenthesis));
