@@ -2,13 +2,13 @@ namespace HelloWorld.Language
 {
     public class ArrayType : Type
     {
-        public int UpperBound { get; }
         public int LowerBound { get; }
+        public int UpperBound { get; }
 
-        public ArrayType(string type, int upperBound, int lowerBound) : base(type)
+        public ArrayType(string type, int lowerBound, int upperBound) : base(type)
         {
-            UpperBound = upperBound;
             LowerBound = lowerBound;
+            UpperBound = upperBound;
         }
     }
 }

@@ -92,7 +92,10 @@ namespace HelloWorld.Parser
 
             CheckType(TokenType.Semicolon, true);
             
-            return new Program(identifier, identifiersList);
+            var declarations = Declarations();
+            
+            CheckType(TokenType.Dot, true);
+            return new Program(identifier, identifiersList, declarations);
         }
 
         public Identifier Identifier()
@@ -136,8 +139,18 @@ namespace HelloWorld.Parser
             Type type = null;
             if (CheckWord("array", false))
             {
-                CheckWord("[", true);
-                CheckWord("]", true);
+                CheckType(TokenType.LeftBracket, true);
+                CheckType(TokenType.Num, false);
+                int lower = System.Convert.ToInt32(Next().Value);
+                CheckType(TokenType.Dots, true);
+                CheckType(TokenType.Num, false);
+                int upper = System.Convert.ToInt32(Next().Value);
+                CheckType(TokenType.RightBracket, true);
+
+                CheckWord("of", true);
+                CheckType(TokenType.Type, false);
+                var token = Next();
+                type = new ArrayType(token.Value, lower, upper);
             }
             else
             {

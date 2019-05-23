@@ -4,14 +4,15 @@ namespace HelloWorld.Language
 {
     public class Program : NonTerminal
     {
-        public NonTerminal IdentifierList { get; }
         public Identifier ProgramIdentifier { get; }
-        public Program(Identifier identifier, NonTerminal identifiers)
+        public NonTerminal IdentifierList { get; }
+        public NonTerminal Declarations { get; }
+
+        public Program(Identifier identifier, NonTerminal identifiers, NonTerminal declarations)
         {
             ProgramIdentifier = identifier;
             IdentifierList = identifiers;
+            Declarations = declarations;
         }
-
-        
     }
 }
