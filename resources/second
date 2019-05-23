@@ -1,4 +1,7 @@
 program _example(input, output);
 var x, y, z : integer;
 var arr : array [-5..2] of real;
+function fun(): integer;
+procedure fun1(a, b : integer; c : real);
+var bb : real;
 .

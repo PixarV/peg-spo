@@ -7,12 +7,16 @@ namespace HelloWorld.Language
         public Identifier ProgramIdentifier { get; }
         public NonTerminal IdentifierList { get; }
         public NonTerminal Declarations { get; }
+        public NonTerminal SubprogramDeclarations { get; }
+        
+        
 
-        public Program(Identifier identifier, NonTerminal identifiers, NonTerminal declarations)
+        public Program(Identifier identifier, NonTerminal identifiers, NonTerminal declarations, NonTerminal subprogramDeclarations)
         {
             ProgramIdentifier = identifier;
             IdentifierList = identifiers;
             Declarations = declarations;
+            SubprogramDeclarations = subprogramDeclarations;
         }
     }
 }

@@ -10,5 +10,9 @@ namespace HelloWorld.Parser
         NonTerminal IdentifierList(TokenType finalType);
         NonTerminal Declarations();
         Declaration Declaration();
+        Type Type();
+        NonTerminal SubprogramDeclarations();
+        Subprogram Subprogram(SubprogramType type);
+        NonTerminal SubprogramHead(SubprogramType subprogramType);
     }
 }

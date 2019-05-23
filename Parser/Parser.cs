@@ -34,9 +34,11 @@ namespace HelloWorld.Parser
             CheckType(TokenType.Semicolon, true);
 
             var declarations = Declarations();
+            var subprogramDeclarations = SubprogramDeclarations();
+            
 
             CheckType(TokenType.Dot, true);
-            return new Program(identifier, identifiersList, declarations);
+            return new Program(identifier, identifiersList, declarations, subprogramDeclarations);
         }
 
         public Identifier Identifier()
@@ -52,9 +54,8 @@ namespace HelloWorld.Parser
 
             while (Peek().TokenType != finalType)
             {
-                CheckType(TokenType.Identifier, false);
-                identifiers.Add(new Identifier(Next().Value));
-                CheckComma(finalType);
+                identifiers.Add(Identifier());
+                CheckSymbol(finalType, TokenType.Comma);
             }
 
             return new IdentifierList(identifiers);
@@ -66,6 +67,7 @@ namespace HelloWorld.Parser
             while (CheckWord("var", false))
             {
                 var declaration = Declaration();
+                CheckType(TokenType.Semicolon, true);
                 declarations.Add(declaration);
             }
 
@@ -76,21 +78,74 @@ namespace HelloWorld.Parser
         {
             var identifierList = IdentifierList(TokenType.Colon);
             CheckWord(":", true);
+            var type = Type();
 
-            Type type = null;
+            return new Declaration(identifierList, type);
+        }
+
+        public Type Type()
+        {
             if (CheckWord("array", false))
             {
-                type = GetArray();
+                return GetArray();
             }
-            else
+
+            CheckType(TokenType.Type, false);
+            var token = Next();
+            return new Type(token.Value);
+        }
+
+        public NonTerminal SubprogramDeclarations()
+        {
+            var subprograms = new List<Subprogram>();
+
+            while (true)
             {
-                CheckType(TokenType.Type, false);
-                var token = Next();
-                type = new Type(token.Value);
+                var first = CheckWord("procedure", false);
+                var second = CheckWord("function", false);
+                if (!first && !second) break;
+
+                var subprogramType = first ? SubprogramType.Procedure : SubprogramType.Function;
+
+                var subprogram = Subprogram(subprogramType);
+                subprograms.Add(subprogram);
+            }
+
+            return new SubprogramDeclarations(subprograms);
+        }
+
+        public Subprogram Subprogram(SubprogramType type)
+        {
+            var subprogramHead = SubprogramHead(type);
+            var declarations = Declarations();
+            return new Subprogram(subprogramHead, declarations);
+        }
+
+        public NonTerminal SubprogramHead(SubprogramType subprogramType)
+        {
+            var identifier = Identifier();
+            var parameters = new List<Declaration>();
+
+            CheckType(TokenType.LeftParenthesis, true);
+
+            while (Peek().TokenType != TokenType.RightParenthesis)
+            {
+                var declaration = Declaration();
+                parameters.Add(declaration);
+                CheckSymbol(TokenType.RightParenthesis, TokenType.Semicolon);
+            }
+            Eat();
+
+            Type returnType = null;
+            if (subprogramType == SubprogramType.Function)
+            {
+                CheckType(TokenType.Colon, true);
+                returnType = Type();
             }
 
             CheckType(TokenType.Semicolon, true);
-            return new Declaration(identifierList, type);
+
+            return new SubprogramHead(subprogramType, identifier, parameters, returnType);
         }
 
         private Token Next()
@@ -136,15 +191,15 @@ namespace HelloWorld.Parser
             return true;
         }
 
-        private bool CheckComma(TokenType finalType)
+        private bool CheckSymbol(TokenType finalType, TokenType symbol)
         {
             var token = Peek();
             var type = token.TokenType;
 
-            if (type != TokenType.Comma && type != finalType)
-                throw new InvalidDataException("missing comma");
+            if (type != symbol && type != finalType)
+                throw new InvalidDataException("missing " + symbol);
 
-            if (type != TokenType.Comma) return true;
+            if (type != symbol) return true;
 
             Eat();
             if (Peek().TokenType == finalType)
@@ -152,6 +207,15 @@ namespace HelloWorld.Parser
 
             return true;
         }
+
+//        private bool CheckSemicolon(TokenType finalType)
+//        {
+//            var token = Peek();
+//            var type = token.TokenType;
+//            
+//            if (type != TokenType.Semicolon && type != finalType)
+//                throw new InvalidDataException("missing ");
+//        }
 
         private ArrayType GetArray()
         {
