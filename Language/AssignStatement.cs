@@ -1,11 +1,11 @@
 namespace HelloWorld.Language
 {
-    public class AssignStatement : NonTerminal
+    public class AssignStatement : Statement
     {
         public Identifier VariableIdentifier { get; }
         public NonTerminal Expression { get;  }
 
-        public AssignStatement(Identifier variableIdentifier, NonTerminal expression)
+        public AssignStatement(StatementType statementType, Identifier variableIdentifier, NonTerminal expression) : base(statementType)
         {
             VariableIdentifier = variableIdentifier;
             Expression = expression;

@@ -16,7 +16,10 @@ namespace HelloWorld.Lexer.Token
         Dot,
         Type,
         Compound,
-        Operation,
-        AssignOp
+        AssignOp,
+        RelOp,
+        AddOp,
+        MulOp,
+        Sign
     }
 }

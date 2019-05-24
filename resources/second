@@ -7,6 +7,7 @@ end
 procedure fun1(a, b : integer; c : real);
 var bb : real;
 begin
+    bb := 5;
 end;
 begin
 end

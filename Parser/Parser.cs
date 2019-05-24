@@ -35,7 +35,7 @@ namespace HelloWorld.Parser
 
             var declarations = Declarations();
             var subprogramDeclarations = SubprogramDeclarations();
-            var compoundStatements = CompoundStatements();
+            var compoundStatements = CompoundStatement();
 
             CheckType(TokenType.Dot, true);
             return new Program(identifier, identifiersList, declarations, subprogramDeclarations, compoundStatements);
@@ -119,7 +119,7 @@ namespace HelloWorld.Parser
         {
             var subprogramHead = SubprogramHead(type);
             var declarations = Declarations();
-            var compoundStatements = CompoundStatements();
+            var compoundStatements = CompoundStatement();
             return new Subprogram(subprogramHead, declarations, compoundStatements);
         }
 
@@ -136,6 +136,7 @@ namespace HelloWorld.Parser
                 parameters.Add(declaration);
                 CheckSymbol(TokenType.RightParenthesis, TokenType.Semicolon);
             }
+
             Eat();
 
             Type returnType = null;
@@ -150,15 +151,77 @@ namespace HelloWorld.Parser
             return new SubprogramHead(subprogramType, identifier, parameters, returnType);
         }
 
-        public NonTerminal CompoundStatements()
+        public NonTerminal CompoundStatement()
         {
+            var statements = new List<NonTerminal>();
+
             CheckWord("begin", true);
-            CheckWord("end", true);
-            
-            return new CompoundStatement(new List<NonTerminal>());
+            while (!CheckWord("end", false))
+            {
+                var statement = Statement();
+                statements.Add(statement);
+                CheckType(TokenType.Semicolon, true);
+            }
+
+            return new CompoundStatement(statements);
         }
 
+        public NonTerminal Statement()
+        {
+            var token = Next();
 
+            switch (token.Value)
+            {
+                case "begin":
+                {
+                    break;
+                }
+
+                case "if":
+                {
+                    break;   
+                }
+                
+                case "while":
+                {
+                    break;   
+                }
+
+                default:
+                {
+                    if (token.TokenType != TokenType.Identifier) throw new InvalidDataException("illegal keyword");
+                    var identifier = new Identifier(token.Value);
+                    CheckType(TokenType.AssignOp, true);
+                    return new AssignStatement(StatementType.Assign, identifier, Expression());
+                }
+                
+                
+
+            }
+
+            return null;
+        }
+
+        public NonTerminal Expression()
+        {
+            return null;
+        }
+        
+        public NonTerminal SimpleExpression()
+        {
+            return null;
+        }
+        
+        public NonTerminal Term()
+        {
+            return null;
+        }
+        
+        public NonTerminal Factor()
+        {
+            return null;
+        }
+        
         private Token Next()
         {
             return _tokens[_index++];

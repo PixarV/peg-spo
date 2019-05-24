@@ -9,15 +9,13 @@ namespace HelloWorld.Language
     }
 
 
-    public class Statement<T> where T : NonTerminal
+    public class Statement : NonTerminal
     {
         public StatementType StatementType { get; }
-        public T TrueStatement { get; }
-
-        public Statement(StatementType statementType, T statement)
+        
+        public Statement(StatementType statementType)
         {
             StatementType = statementType;
-            TrueStatement = statement;
         }
     }
 }
