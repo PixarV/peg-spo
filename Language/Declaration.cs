@@ -1,6 +1,6 @@
 namespace HelloWorld.Language
 {
-    public class Declaration
+    public class Declaration : NonTerminal
     {
         public NonTerminal IdentifierList { get; }
         public Type Type { get; }

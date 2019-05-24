@@ -63,7 +63,7 @@ namespace HelloWorld.Parser
 
         public NonTerminal Declarations()
         {
-            var declarations = new List<Declaration>();
+            var declarations = new List<NonTerminal>();
             while (CheckWord("var", false))
             {
                 var declaration = Declaration();
@@ -74,7 +74,7 @@ namespace HelloWorld.Parser
             return new Declarations(declarations);
         }
 
-        public Declaration Declaration()
+        public NonTerminal Declaration()
         {
             var identifierList = IdentifierList(TokenType.Colon);
             CheckWord(":", true);
@@ -97,7 +97,7 @@ namespace HelloWorld.Parser
 
         public NonTerminal SubprogramDeclarations()
         {
-            var subprograms = new List<Subprogram>();
+            var subprograms = new List<NonTerminal>();
 
             while (true)
             {
@@ -115,7 +115,7 @@ namespace HelloWorld.Parser
             return new SubprogramDeclarations(subprograms);
         }
 
-        public Subprogram Subprogram(SubprogramType type)
+        public NonTerminal Subprogram(SubprogramType type)
         {
             var subprogramHead = SubprogramHead(type);
             var declarations = Declarations();
@@ -126,7 +126,7 @@ namespace HelloWorld.Parser
         public NonTerminal SubprogramHead(SubprogramType subprogramType)
         {
             var identifier = Identifier();
-            var parameters = new List<Declaration>();
+            var parameters = new List<NonTerminal>();
 
             CheckType(TokenType.LeftParenthesis, true);
 

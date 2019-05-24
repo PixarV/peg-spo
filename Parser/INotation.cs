@@ -9,10 +9,10 @@ namespace HelloWorld.Parser
         Identifier Identifier();
         NonTerminal IdentifierList(TokenType finalType);
         NonTerminal Declarations();
-        Declaration Declaration();
+        NonTerminal Declaration();
         Type Type();
         NonTerminal SubprogramDeclarations();
-        Subprogram Subprogram(SubprogramType type);
+        NonTerminal Subprogram(SubprogramType type);
         NonTerminal SubprogramHead(SubprogramType subprogramType);
         NonTerminal CompoundStatement();
         NonTerminal Statement();

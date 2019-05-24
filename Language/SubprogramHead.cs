@@ -12,10 +12,10 @@ namespace HelloWorld.Language
     {
         public SubprogramType SubprogramType;
         public Identifier Identifier;
-        public List<Declaration> Parameters;
+        public List<NonTerminal> Parameters;
         public Type ReturnType;
 
-        public SubprogramHead(SubprogramType subprogramType, Identifier identifier, List<Declaration> parameters,
+        public SubprogramHead(SubprogramType subprogramType, Identifier identifier, List<NonTerminal> parameters,
             Type returnType)
         {
             SubprogramType = subprogramType;
@@ -24,7 +24,7 @@ namespace HelloWorld.Language
             ReturnType = returnType;
         }
 
-        public SubprogramHead(SubprogramType subprogramType, Identifier identifier, List<Declaration> parameters)
+        public SubprogramHead(SubprogramType subprogramType, Identifier identifier, List<NonTerminal> parameters)
         {
             SubprogramType = subprogramType;
             Identifier = identifier;

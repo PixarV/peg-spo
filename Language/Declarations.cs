@@ -4,9 +4,9 @@ namespace HelloWorld.Language
 {
     public class Declarations : NonTerminal
     {
-        private List<Declaration> _declarations;
+        private List<NonTerminal> _declarations;
 
-        public Declarations(List<Declaration> declarations)
+        public Declarations(List<NonTerminal> declarations)
         {
             _declarations = declarations;
         }

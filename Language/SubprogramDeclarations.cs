@@ -4,9 +4,9 @@ namespace HelloWorld.Language
 {
     public class SubprogramDeclarations : NonTerminal
     {
-        private List<Subprogram> _subprograms;
+        private List<NonTerminal> _subprograms;
 
-        public SubprogramDeclarations(List<Subprogram> subprograms)
+        public SubprogramDeclarations(List<NonTerminal> subprograms)
         {
             _subprograms = subprograms;
         }
