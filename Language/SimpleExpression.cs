@@ -13,6 +13,12 @@ namespace HelloWorld.Language
     {
         public NonTerminal Term { get; }
         public AddOpertaion AddOpertaion { get; }
+
+        public Simple(NonTerminal term, AddOpertaion addOpertaion)
+        {
+            Term = term;
+            AddOpertaion = addOpertaion;
+        }
     }
 
     public class SimpleExpression : NonTerminal

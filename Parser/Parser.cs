@@ -179,12 +179,12 @@ namespace HelloWorld.Parser
 
                 case "if":
                 {
-                    break;   
+                    break;
                 }
-                
+
                 case "while":
                 {
-                    break;   
+                    break;
                 }
 
                 default:
@@ -194,9 +194,6 @@ namespace HelloWorld.Parser
                     CheckType(TokenType.AssignOp, true);
                     return new AssignStatement(StatementType.Assign, identifier, Expression());
                 }
-                
-                
-
             }
 
             return null;
@@ -204,24 +201,76 @@ namespace HelloWorld.Parser
 
         public NonTerminal Expression()
         {
-            return null;
+            var first = SimpleExpression();
+            var existsRel = Peek().TokenType != TokenType.RelOp;
+            var relOp = existsRel ? RelOperation.None : (Peek().Value == "<") ? RelOperation.Less : RelOperation.More;
+            var second = (existsRel) ? null : SimpleExpression();
+
+            return new Expression(first, second, relOp);
         }
-        
+
         public NonTerminal SimpleExpression()
         {
-            return null;
+            var simples = new List<Simple>();
+            while (true)
+            {
+                var term = Term();
+                var existsAdd = Peek().TokenType != TokenType.AddOp;
+                var addOp = existsAdd ? AddOpertaion.None : (Peek().Value == "+") ? AddOpertaion.Add : AddOpertaion.Sub;
+                simples.Add(new Simple(term, addOp));
+                if (existsAdd) break;
+                Eat();
+            }
+
+            return new SimpleExpression(simples);
         }
-        
+
         public NonTerminal Term()
         {
-            return null;
+            var simpleTerms = new List<SimpleTerm>();
+            while (true)
+            {
+                var factor = Factor();
+                var existsMul = Peek().TokenType != TokenType.MulOp;
+                var mulOp = existsMul ? MulOperation.None : (Peek().Value == "*") ? MulOperation.Mul : MulOperation.Div;
+                simpleTerms.Add(new SimpleTerm(factor, mulOp));
+                if (existsMul) break;
+                Eat();
+            }
+
+            return new Term(simpleTerms);
         }
-        
+
         public NonTerminal Factor()
         {
+            var token = Next();
+
+            switch (token.TokenType)
+            {
+                case TokenType.Identifier:
+                {
+                    return new Factor(FactorType.Id, new Identifier(token.Value));
+                }
+
+                case TokenType.Num:
+                {
+                    return new Factor(FactorType.Num, token.Value);
+                }
+
+                case TokenType.LeftParenthesis:
+                {
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
+
             return null;
         }
-        
+
         private Token Next()
         {
             return _tokens[_index++];

@@ -11,8 +11,14 @@ namespace HelloWorld.Language
     
     public struct SimpleTerm
     {
-        public NonTerminal factor { get; }
+        public NonTerminal Factor { get; }
         public MulOperation MulOperation { get; }
+
+        public SimpleTerm(NonTerminal factor, MulOperation mulOperation)
+        {
+            Factor = factor;
+            MulOperation = mulOperation;
+        }
     }
     
     public class Term : NonTerminal

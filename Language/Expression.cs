@@ -1,6 +1,6 @@
 namespace HelloWorld.Language
 {
-    public enum RelationOp
+    public enum RelOperation
     {
         More,
         Less,
@@ -11,13 +11,13 @@ namespace HelloWorld.Language
     {
         public NonTerminal First { get; }
         public NonTerminal Second { get; }
-        public RelationOp RelationOp { get; }
+        public RelOperation RelOperation { get; }
 
-        public Expression(NonTerminal first, NonTerminal second, RelationOp relationOp)
+        public Expression(NonTerminal first, NonTerminal second, RelOperation relOperation)
         {
             First = first;
             Second = second;
-            RelationOp = relationOp;
+            RelOperation = relOperation;
         }
     }
 }
