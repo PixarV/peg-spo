@@ -174,7 +174,15 @@ namespace HelloWorld.Parser
             {
                 case "begin":
                 {
-                    break;
+                    var statements = new List<NonTerminal>();
+                    while (!CheckWord("end", false))
+                    {
+                        var statement = Statement();
+                        statements.Add(statement);
+                        CheckType(TokenType.Semicolon, true);
+                    }
+
+                    return new CompoundStatement(statements);
                 }
 
                 case "if":
@@ -203,10 +211,11 @@ namespace HelloWorld.Parser
         {
             var first = SimpleExpression();
             var notExistsRel = Peek().TokenType != TokenType.RelOp;
-            var relOp = notExistsRel ? RelOperation.None : (Peek().Value == "<") ? RelOperation.Less : RelOperation.More;
+            var relOp = notExistsRel ? RelOperation.None :
+                (Peek().Value == "<") ? RelOperation.Less : RelOperation.More;
             if (!notExistsRel) Eat();
             var second = (notExistsRel) ? null : SimpleExpression();
-            
+
             return new Expression(first, second, relOp);
         }
 
@@ -217,7 +226,8 @@ namespace HelloWorld.Parser
             {
                 var term = Term();
                 var notExistsAdd = Peek().TokenType != TokenType.AddOp;
-                var addOp = notExistsAdd ? AddOpertaion.None : (Peek().Value == "+") ? AddOpertaion.Add : AddOpertaion.Sub;
+                var addOp = notExistsAdd ? AddOpertaion.None :
+                    (Peek().Value == "+") ? AddOpertaion.Add : AddOpertaion.Sub;
                 simples.Add(new Simple(term, addOp));
                 if (notExistsAdd) break;
                 Eat();
@@ -233,7 +243,8 @@ namespace HelloWorld.Parser
             {
                 var factor = Factor();
                 var notExistsMul = Peek().TokenType != TokenType.MulOp;
-                var mulOp = notExistsMul ? MulOperation.None : (Peek().Value == "*") ? MulOperation.Mul : MulOperation.Div;
+                var mulOp = notExistsMul ? MulOperation.None :
+                    (Peek().Value == "*") ? MulOperation.Mul : MulOperation.Div;
                 simpleTerms.Add(new SimpleTerm(factor, mulOp));
                 if (notExistsMul) break;
                 Eat();

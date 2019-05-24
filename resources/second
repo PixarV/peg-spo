@@ -12,5 +12,8 @@ begin
     c := a < (d + f);
 end;
 begin
+begin
+    c := 5;
+end;
 end
 .
