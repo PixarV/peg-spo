@@ -202,10 +202,11 @@ namespace HelloWorld.Parser
         public NonTerminal Expression()
         {
             var first = SimpleExpression();
-            var existsRel = Peek().TokenType != TokenType.RelOp;
-            var relOp = existsRel ? RelOperation.None : (Peek().Value == "<") ? RelOperation.Less : RelOperation.More;
-            var second = (existsRel) ? null : SimpleExpression();
-
+            var notExistsRel = Peek().TokenType != TokenType.RelOp;
+            var relOp = notExistsRel ? RelOperation.None : (Peek().Value == "<") ? RelOperation.Less : RelOperation.More;
+            if (!notExistsRel) Eat();
+            var second = (notExistsRel) ? null : SimpleExpression();
+            
             return new Expression(first, second, relOp);
         }
 
@@ -215,10 +216,10 @@ namespace HelloWorld.Parser
             while (true)
             {
                 var term = Term();
-                var existsAdd = Peek().TokenType != TokenType.AddOp;
-                var addOp = existsAdd ? AddOpertaion.None : (Peek().Value == "+") ? AddOpertaion.Add : AddOpertaion.Sub;
+                var notExistsAdd = Peek().TokenType != TokenType.AddOp;
+                var addOp = notExistsAdd ? AddOpertaion.None : (Peek().Value == "+") ? AddOpertaion.Add : AddOpertaion.Sub;
                 simples.Add(new Simple(term, addOp));
-                if (existsAdd) break;
+                if (notExistsAdd) break;
                 Eat();
             }
 
@@ -231,10 +232,10 @@ namespace HelloWorld.Parser
             while (true)
             {
                 var factor = Factor();
-                var existsMul = Peek().TokenType != TokenType.MulOp;
-                var mulOp = existsMul ? MulOperation.None : (Peek().Value == "*") ? MulOperation.Mul : MulOperation.Div;
+                var notExistsMul = Peek().TokenType != TokenType.MulOp;
+                var mulOp = notExistsMul ? MulOperation.None : (Peek().Value == "*") ? MulOperation.Mul : MulOperation.Div;
                 simpleTerms.Add(new SimpleTerm(factor, mulOp));
-                if (existsMul) break;
+                if (notExistsMul) break;
                 Eat();
             }
 
@@ -259,11 +260,14 @@ namespace HelloWorld.Parser
 
                 case TokenType.LeftParenthesis:
                 {
-                    break;
+                    var expression = Expression();
+                    CheckType(TokenType.RightParenthesis, true);
+                    return new Factor(FactorType.Exp, expression);
                 }
 
                 default:
                 {
+                    // not
                     break;
                 }
             }

@@ -13,7 +13,7 @@ namespace HelloWorld.Language
         public FactorType Type { get; }
         public Identifier Identifier { get; }
         public string Digit { get; }
-        public Expression Expression { get; }
+        public NonTerminal Expression { get; }
 
         public Factor(FactorType type, Identifier identifier)
         {
@@ -27,7 +27,7 @@ namespace HelloWorld.Language
             Digit = digit;
         }
 
-        public Factor(FactorType type, Expression expression)
+        public Factor(FactorType type, NonTerminal expression)
         {
             Type = type;
             Expression = expression;
